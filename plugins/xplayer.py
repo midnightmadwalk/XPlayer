@@ -190,7 +190,21 @@ async def yt_x_bleck_megik(link: str) -> Optional[str]:
         yt_id = get_yt_video_id(yt_.get("url"))
     return yt_id
 
-
+################### channel as playlist functions ################### 
+async def check_audio_files_in_channel(channel: str):
+    try:
+        list = []
+        async for _ in userge.search_messages(channel, filter="audio"):
+            list.append(_.audio.file_id)
+            total = len(list)
+            if total == 0:
+                return "ERROR no audio files."
+            else:
+                return f"found {total} audio files in @{channel}"
+    except Exception as e:
+        print("ERROR:", e)
+################### END ################### 
+        
 def pop_and_del(gc: XPlayer) -> None:
     to_del = keypath(gc.playlist.pop(0)["id"])
     if os.path.exists(to_del):
@@ -897,7 +911,7 @@ async def start_radio(m: Message, gc: XPlayer):
 @userge.on_cmd(
     "playlist",
     about={
-        "header": "Get Song Playlist in current voive chat",
+        "header": "Get Song Playlist in current voice chat",
         "usage": "use {tr}playlist",
     },
 )
